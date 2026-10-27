@@ -24,15 +24,14 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: অ্যান্ড্রয়েড SDK ও লাইসেন্স সেটআপ
-        uses: android-actions/setup-android@v3
-
-      - name: লাইসেন্স স্বয়ংক্রিয় গ্রহণ
+      - name: অ্যান্ড্রয়েড লাইসেন্স স্বয়ংক্রিয় গ্রহণ
         run: |
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
-      - name: গ্র্যাডল সেটআপ
+      - name: গ্র্যাডল ৮.৭ সেটআপ
         uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
 
       - name: APK তৈরি করা
         run: gradle assembleDebug --stacktrace
