@@ -1,7 +1,8 @@
-name: Build Samir AI APK
+name: Build Sadia AI APK
 
 on:
   push:
+    branches: [ "main", "master" ]
   workflow_dispatch:
 
 jobs:
@@ -9,35 +10,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: কোড চেকআউট
-        uses: actions/checkout@v4
+    - name: Checkout Repository
+      uses: actions/checkout@v4
 
-      - name: জিপ ফাইল আনজিপ করা
-        run: |
-          if [ -f "samir-ai-project.zip" ]; then
-            unzip -o samir-ai-project.zip
-          fi
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
 
-      - name: জাভা সেটআপ (JDK 17)
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v3
+      with:
+        gradle-version: 8.7
 
-      - name: অ্যান্ড্রয়েড লাইসেন্স স্বয়ংক্রিয় গ্রহণ
-        run: |
-          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+    - name: Build Debug APK
+      run: gradle assembleDebug
 
-      - name: গ্র্যাডল ৮.৭ সেটআপ
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.7'
-
-      - name: APK তৈরি করা
-        run: gradle assembleDebug --stacktrace
-
-      - name: APK আপলোড
-        uses: actions/upload-artifact@v4
-        with:
-          name: SAMIR-AI-APK
-          path: app/build/outputs/apk/debug/*.apk
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: SadiaAI-APK
+        path: app/build/outputs/apk/debug/app-debug.apk
